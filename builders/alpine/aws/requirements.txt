@@ -1,0 +1,2 @@
+awscli>=1.20
+aws-sam-cli>=1.26
