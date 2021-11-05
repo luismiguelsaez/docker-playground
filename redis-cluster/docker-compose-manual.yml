@@ -53,6 +53,30 @@ services:
     networks:
       - redis-cluster
 
+  redis-5:
+    image: redis:4.0.11
+    command: /etc/redis/cluster.conf
+    expose:
+      - 6379
+    volumes:
+      - redis-data-5:/data
+      - ./cluster.conf:/etc/redis/cluster.conf
+    networks:
+      - redis-cluster
+
+  redis-cl-init:
+    build: .
+    command: create --replicas 1 redis-0:6379 redis-1:6379 redis-2:6379 redis-3:6379 redis-4:6379 redis-5:6379
+    networks:
+      - redis-cluster
+    depends_on:
+      - redis-0
+      - redis-1
+      - redis-2
+      - redis-3
+      - redis-4
+      - redis-5
+
 networks:
   redis-cluster: {}
 
@@ -66,4 +90,6 @@ volumes:
   redis-data-3:
     driver: local
   redis-data-4:
+    driver: local
+  redis-data-5:
     driver: local
