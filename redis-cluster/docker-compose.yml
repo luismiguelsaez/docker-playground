@@ -1,4 +1,5 @@
 version: '2'
+
 services:
   redis-node-0:
     image: docker.io/bitnami/redis-cluster:6.2

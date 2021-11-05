@@ -2,6 +2,9 @@
 start:
 	docker-compose up -d
 
+start-manual:
+	docker-compose -f docker-compose-manual.yml up -d
+
 cl-benchmark:
 	docker-compose exec redis-node-1 redis-benchmark -n 1000000 -t set,get -P 16 -q -h 127.0.0.1 -p 6379 --cluster
 
