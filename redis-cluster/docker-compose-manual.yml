@@ -2,60 +2,51 @@ version: "3.8"
 
 services:
 
-  redis-0:
-    image: redis:4.0.11
-    command: /etc/redis/cluster.conf
-    expose:
-      - 6379
-    volumes:
-      - ./cluster.conf:/etc/redis/cluster.conf
-    networks:
-      - redis-cluster
   redis-1:
-    image: redis:4.0.11
+    image: redis:4.0.11-alpine
     command: /etc/redis/cluster.conf
     expose:
       - 6379
     volumes:
-      - ./cluster.conf:/etc/redis/cluster.conf
-    networks:
-      - redis-cluster
+      - ./conf/cluster-01.conf:/etc/redis/cluster.conf
+    network_mode: host
   redis-2:
-    image: redis:4.0.11
+    image: redis:4.0.11-alpine
     command: /etc/redis/cluster.conf
     expose:
-      - 6379
+      - 6380
     volumes:
-      - ./cluster.conf:/etc/redis/cluster.conf
-    networks:
-      - redis-cluster
+      - ./conf/cluster-02.conf:/etc/redis/cluster.conf
+    network_mode: host
   redis-3:
-    image: redis:4.0.11
+    image: redis:4.0.11-alpine
     command: /etc/redis/cluster.conf
     expose:
-      - 6379
+      - 6381
     volumes:
-      - ./cluster.conf:/etc/redis/cluster.conf
-    networks:
-      - redis-cluster
+      - ./conf/cluster-03.conf:/etc/redis/cluster.conf
+    network_mode: host
   redis-4:
-    image: redis:4.0.11
+    image: redis:4.0.11-alpine
     command: /etc/redis/cluster.conf
     expose:
-      - 6379
+      - 6382
     volumes:
-      - ./cluster.conf:/etc/redis/cluster.conf
-    networks:
-      - redis-cluster
+      - ./conf/cluster-04.conf:/etc/redis/cluster.conf
+    network_mode: host
   redis-5:
-    image: redis:4.0.11
+    image: redis:4.0.11-alpine
     command: /etc/redis/cluster.conf
     expose:
-      - 6379
+      - 6383
     volumes:
-      - ./cluster.conf:/etc/redis/cluster.conf
-    networks:
-      - redis-cluster
-
-networks:
-  redis-cluster: {}
+      - ./conf/cluster-05.conf:/etc/redis/cluster.conf
+    network_mode: host
+  redis-6:
+    image: redis:4.0.11-alpine
+    command: /etc/redis/cluster.conf
+    expose:
+      - 6384
+    volumes:
+      - ./conf/cluster-06.conf:/etc/redis/cluster.conf
+    network_mode: host

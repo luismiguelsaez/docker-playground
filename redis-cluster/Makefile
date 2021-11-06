@@ -6,7 +6,7 @@ start-manual:
 	docker-compose -f docker-compose-manual.yml up -d
 
 cl-init:
-	docker run --net redis-cluster_redis-cluster -it --rm wenxiang/redis-trib create redis-0:6379 redis-1:6379 redis-2:6379 redis-3:6379 redis-4:6379 redis-5:6379
+	docker run --network host -it --rm inem0o/redis-trib create --replicas 1 127.0.0.1:6379 127.0.0.1:6380 127.0.0.1:6381 127.0.0.1:6382 127.0.0.1:6383 127.0.0.1:6384
 
 cl-benchmark:
 	docker-compose exec redis-node-1 redis-benchmark -n 1000000 -t set,get -P 16 -q -h 127.0.0.1 -p 6379 --cluster
@@ -21,4 +21,7 @@ get-cli:
 	docker-compose exec redis-node-0 redis-cli
 
 stop:
-	docker-compose down
+	docker-compose down --remove-orphans
+
+stop-manual:
+	docker-compose -f docker-compose-manual.yml down --remove-orphans
