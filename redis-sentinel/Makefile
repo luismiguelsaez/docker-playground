@@ -14,5 +14,8 @@ sentinel-masters:
 sentinel-get-master-addr:
 	docker-compose exec sentinel-0 redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
 
+sentinel-tunnel-connect:
+	docker-compose exec redis-0 redis-cli -h sentinel-tunnel -p 6379
+
 down:
 	docker-compose down --remove-orphans
