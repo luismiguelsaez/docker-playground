@@ -1,6 +1,6 @@
 .PHONY: all
 
-all: up sentinel-get-master-addr simulate-master-down sentinel-tunnel-connect
+all: up sentinel-get-master-addr simulate-master-down sentinel-tunnel-connect down
 
 up:
 	docker-compose up -d
