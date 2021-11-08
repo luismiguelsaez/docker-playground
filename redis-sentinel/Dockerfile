@@ -4,4 +4,4 @@ RUN go install github.com/RedisLabs/sentinel_tunnel@latest
 
 COPY conf/sentinel-tunnel/tunnel.conf /etc/tunnel.conf
 
-ENTRYPOINT ["sentinel_tunnel","/etc/tunnel.conf","/var/log/tunnel.log"]
+ENTRYPOINT ["sentinel_tunnel","/etc/tunnel.conf","/dev/stdout"]
