@@ -64,6 +64,16 @@ services:
       - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
       - 'REDIS_CLUSTER_CREATOR=yes'
 
+  redis-client:
+    build: .
+    depends_on:
+      - redis-node-0
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+      - redis-node-5
+
 volumes:
   redis-cluster_data-0:
     driver: local

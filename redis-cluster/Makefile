@@ -10,7 +10,7 @@ cl-benchmark-manual:
 cl-set-manual:
 	docker run -it --rm --network host --entrypoint=redis-cli redis:6-alpine -h 127.0.0.1 -p 6382 set foo bar --cluster
 
-cl-nodes:
+cl-nodes-manual:
 	docker run -it --rm --network host --entrypoint=redis-cli redis:6-alpine -h 127.0.0.1 -p 6382 cluster nodes
 
 cl-init-manual:

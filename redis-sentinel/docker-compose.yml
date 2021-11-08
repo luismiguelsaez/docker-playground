@@ -1,0 +1,105 @@
+version: "3.8"
+
+services:
+
+  redis-0:
+    image: bitnami/redis:6.2.6
+    environment:
+      - 'REDIS_REPLICATION_MODE=master'
+      - 'ALLOW_EMPTY_PASSWORD=yes'
+    expose:
+      - 6379
+    networks:
+      - redis-sentinel
+
+  redis-slave-0:
+    image: bitnami/redis:6.2.6
+    environment:
+      - 'REDIS_REPLICATION_MODE=slave'
+      - 'REDIS_MASTER_HOST=redis-0'
+      - 'ALLOW_EMPTY_PASSWORD=yes'
+    expose:
+      - 6379
+    networks:
+      - redis-sentinel
+    depends_on:
+      - redis-0
+
+  redis-slave-1:
+    image: bitnami/redis:6.2.6
+    environment:
+      - 'REDIS_REPLICATION_MODE=slave'
+      - 'REDIS_MASTER_HOST=redis-0'
+      - 'ALLOW_EMPTY_PASSWORD=yes'
+    expose:
+      - 6379
+    networks:
+      - redis-sentinel
+    depends_on:
+      - redis-0
+
+  sentinel-0:
+    image: bitnami/redis-sentinel:6.2.6
+    environment:
+      - 'REDIS_MASTER_HOST=redis-0'
+      - 'REDIS_MASTER_PORT_NUMBER=6379'
+      - 'REDIS_SENTINEL_PORT_NUMBER=26379'
+      - 'REDIS_SENTINEL_QUORUM=2'
+      - 'REDIS_SENTINEL_ANNOUNCE_IP=sentinel-2'
+      - 'REDIS_SENTINEL_ANNOUNCE_PORT=26379'
+      - 'REDIS_SENTINEL_FAILOVER_TIMEOUT=30000'
+      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=10000'
+    #volumes:
+    #  - ./conf/sentinel-0:/bitnami/redis-sentinel/conf:rw
+    expose:
+      - 26379
+    networks:
+      - redis-sentinel
+    depends_on:
+      - redis-0
+      - redis-slave-0
+
+  sentinel-1:
+    image: bitnami/redis-sentinel:6.2.6
+    environment:
+      - 'REDIS_MASTER_HOST=redis-0'
+      - 'REDIS_MASTER_PORT_NUMBER=6379'
+      - 'REDIS_SENTINEL_PORT_NUMBER=26379'
+      - 'REDIS_SENTINEL_QUORUM=2'
+      - 'REDIS_SENTINEL_ANNOUNCE_IP=sentinel-2'
+      - 'REDIS_SENTINEL_ANNOUNCE_PORT=26379'
+      - 'REDIS_SENTINEL_FAILOVER_TIMEOUT=30000'
+      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=10000'
+  #  #volumes:
+  #  #  - ./conf/sentinel-1:/bitnami/redis-sentinel/conf:rw
+    expose:
+      - 26379
+    networks:
+      - redis-sentinel
+    depends_on:
+      - redis-0
+      - redis-slave-0
+
+  sentinel-2:
+    image: bitnami/redis-sentinel:6.2.6
+    environment:
+      - 'REDIS_MASTER_HOST=redis-0'
+      - 'REDIS_MASTER_PORT_NUMBER=6379'
+      - 'REDIS_SENTINEL_PORT_NUMBER=26379'
+      - 'REDIS_SENTINEL_QUORUM=2'
+      - 'REDIS_SENTINEL_ANNOUNCE_IP=sentinel-2'
+      - 'REDIS_SENTINEL_ANNOUNCE_PORT=26379'
+      - 'REDIS_SENTINEL_FAILOVER_TIMEOUT=30000'
+      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=10000'
+  #  #volumes:
+  #  #  - ./conf/sentinel-2:/bitnami/redis-sentinel/conf:rw
+    expose:
+      - 26379
+    networks:
+      - redis-sentinel
+    depends_on:
+      - redis-0
+      - redis-slave-0
+
+networks:
+  redis-sentinel: {}

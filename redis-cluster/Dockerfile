@@ -1,8 +1,8 @@
-FROM ruby:3
+FROM python:3.6
 
-RUN gem install redis -v 3.3.0
+RUN pip install redis-py-cluster==2.1.3
 
-RUN curl https://raw.githubusercontent.com/zvelo/redis-trib/master/redis-trib.rb -o /usr/local/bin/redis-trib.rb \
-    && chmod +x /usr/local/bin/redis-trib.rb
+RUN mkdir /app
+COPY cluster.py /app
 
-ENTRYPOINT ["/usr/local/bin/redis-trib.rb"]
+ENTRYPOINT ["python","/app/cluster.py"]
