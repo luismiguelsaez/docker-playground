@@ -11,5 +11,8 @@ sentinel-logs:
 sentinel-masters:
 	docker-compose exec sentinel-0 redis-cli -p 26379 SENTINEL MASTERS
 
+sentinel-get-master-addr:
+	docker-compose exec sentinel-0 redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
+
 down:
 	docker-compose down --remove-orphans

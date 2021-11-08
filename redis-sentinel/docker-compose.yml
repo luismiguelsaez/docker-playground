@@ -101,5 +101,18 @@ services:
       - redis-0
       - redis-slave-0
 
+  sentinel-tunnel:
+    build: .
+    expose:
+      - 6379
+    ports:
+      - 6379:6379/tcp
+    networks:
+      - redis-sentinel
+    depends_on:
+      - sentinel-0
+      - sentinel-1
+      - sentinel-2
+
 networks:
   redis-sentinel: {}
