@@ -1,0 +1,50 @@
+version: "3.8"
+
+networks:
+  haproxy: {}
+
+services:
+
+  haproxy:
+    image: haproxy:2.2
+    command: haproxy -q -f /etc/haproxy.conf -p /var/run/haproxy.pid
+    expose:
+      - 80
+    volumes:
+      - ./config/haproxy.conf:/etc/haproxy.conf
+    networks:
+      - haproxy
+
+  nginx-0:
+    image: nginx:alpine
+    expose:
+      - 80
+    networks:
+      - haproxy
+
+  nginx-1:
+    image: nginx:alpine
+    expose:
+      - 80
+    networks:
+      - haproxy
+
+  nginx-2:
+    image: nginx:alpine
+    expose:
+      - 80
+    networks:
+      - haproxy
+
+  nginx-3:
+    image: nginx:alpine
+    expose:
+      - 80
+    networks:
+      - haproxy
+
+  ab:
+    build: .
+    command: -t 60 -m get -v -rk http://haproxy:80/
+    networks:
+      - haproxy
