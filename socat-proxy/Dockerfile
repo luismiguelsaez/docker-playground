@@ -1,5 +1,7 @@
 FROM alpine:3.9
 
+LABEL Description="Socat proxy to redirect SSL endpoints to plain HTTP"
+
 ENV DST_HOST="127.0.0.1"
 ENV DST_PORT="443"
 ENV SRC_PORT="80"
