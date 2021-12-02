@@ -1,0 +1,39 @@
+version: "3.8"
+
+networks:
+  nginx: {}
+
+services:
+
+  nginx:
+    image: nginx:1.20.1-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    expose:
+      - 80
+    networks:
+      - nginx
+
+  backend:
+    image: nginx:1.20.1-alpine
+    expose:
+      - 80
+    networks:
+      - nginx
+
+  ab:
+    build: .
+    command: -n 50 -v -rk http://nginx/limited
+    networks:
+      - nginx
+    depends_on:
+      - nginx
+
+  #curl:
+  #  build: .
+  #  entrypoint: sh -c
+  #  command: "'while true;do curl -vvv http://nginx/limited;sleep 0.1;clear;done'"
+  #  networks:
+  #    - nginx
+  #  depends_on:
+  #    - nginx
