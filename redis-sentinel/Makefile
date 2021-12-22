@@ -3,10 +3,10 @@
 all: up sentinel-get-master-addr simulate-master-down sentinel-tunnel-connect down
 
 up:
-	docker-compose up -d
+	docker-compose up -d --build
 
 simulate-master-down:
-	docker-compose exec redis-0 redis-cli DEBUG sleep 30
+	docker-compose exec redis-0 redis-cli DEBUG sleep 5
 
 sentinel-logs:
 	docker-compose logs -f sentinel-0

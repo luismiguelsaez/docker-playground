@@ -115,13 +115,29 @@ services:
       - sentinel-1
       - sentinel-2
 
-  benchmark:
-    image: redislabs/memtier_benchmark
-    command: --run-count=1 --clients=10 --threads=1 --requests=10000 --reconnect-interval=2 --server=sentinel.tunnel.local --port=6379
+  app:
+    build: app
     networks:
       - redis-sentinel
     depends_on:
       - sentinel-tunnel
 
+  #benchmark:
+  #  image: bitnami/redis:6.2.6
+  #  entrypoint: redis-benchmark
+  #  command: -h sentinel-tunnel -p 6379 -n 100000 -l -t get,put
+  #  networks:
+  #    - redis-sentinel
+  #  depends_on:
+  #    - sentinel-tunnel
+
+  #benchmark:
+  #  image: redislabs/memtier_benchmark
+  #  command: --run-count=1 --clients=10 --threads=1 --requests=10000 --reconnect-interval=2 --server=sentinel.tunnel.local --port=6379
+  #  networks:
+  #    - redis-sentinel
+  #  depends_on:
+  #    - sentinel-tunnel
+
 networks:
-  redis-sentinel: {}
+  redis-sentinel:
