@@ -28,4 +28,4 @@ while True:
   except redis.exceptions.TimeoutError as clTout:
     logging.critical("Node timeout error: {}".format(str(clTout)))
 
-  sleep(1)
+  sleep(0.10)
