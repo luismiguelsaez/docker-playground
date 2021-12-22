@@ -48,7 +48,7 @@ services:
       - 'REDIS_SENTINEL_ANNOUNCE_IP=sentinel-2'
       - 'REDIS_SENTINEL_ANNOUNCE_PORT=26379'
       - 'REDIS_SENTINEL_FAILOVER_TIMEOUT=30000'
-      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=10000'
+      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=2000'
     #volumes:
     #  - ./conf/sentinel-0:/bitnami/redis-sentinel/conf:rw
     expose:
@@ -69,7 +69,7 @@ services:
       - 'REDIS_SENTINEL_ANNOUNCE_IP=sentinel-2'
       - 'REDIS_SENTINEL_ANNOUNCE_PORT=26379'
       - 'REDIS_SENTINEL_FAILOVER_TIMEOUT=30000'
-      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=10000'
+      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=2000'
   #  #volumes:
   #  #  - ./conf/sentinel-1:/bitnami/redis-sentinel/conf:rw
     expose:
@@ -90,7 +90,7 @@ services:
       - 'REDIS_SENTINEL_ANNOUNCE_IP=sentinel-2'
       - 'REDIS_SENTINEL_ANNOUNCE_PORT=26379'
       - 'REDIS_SENTINEL_FAILOVER_TIMEOUT=30000'
-      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=10000'
+      - 'REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=2000'
   #  #volumes:
   #  #  - ./conf/sentinel-2:/bitnami/redis-sentinel/conf:rw
     expose:
@@ -103,6 +103,7 @@ services:
 
   sentinel-tunnel:
     build: .
+    container_name: sentinel.tunnel.local
     expose:
       - 6379
     ports:
@@ -113,6 +114,14 @@ services:
       - sentinel-0
       - sentinel-1
       - sentinel-2
+
+  benchmark:
+    image: redislabs/memtier_benchmark
+    command: --run-count=1 --clients=10 --threads=1 --requests=10000 --reconnect-interval=2 --server=sentinel.tunnel.local --port=6379
+    networks:
+      - redis-sentinel
+    depends_on:
+      - sentinel-tunnel
 
 networks:
   redis-sentinel: {}

@@ -11,6 +11,9 @@ simulate-master-down:
 sentinel-logs:
 	docker-compose logs -f sentinel-0
 
+sentinel-info:
+	docker-compose exec sentinel-0 redis-cli -h localhost -p 26379 info sentinel
+
 sentinel-masters:
 	docker-compose exec sentinel-0 redis-cli -p 26379 SENTINEL MASTERS
 
