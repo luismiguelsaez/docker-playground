@@ -1,0 +1,85 @@
+version: "3"
+
+networks:
+  vault-server: {}
+  backend-etcd: {}
+
+volumes:
+  vault-logs: {}
+  vault-file: {}
+
+services:
+  vault-server:
+    image: vault:1.9.3
+    command: server -config=/etc/vault/config.hcl
+    cap_add:
+      - IPC_LOCK
+    expose:
+      - 8200
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./config/config.hcl:/etc/vault/config.hcl:ro
+      - vault-logs:/vault/logs:rw
+      - vault-file:/vault/file:rw
+    networks:
+      - vault-server
+      - backend-etcd
+    depends_on:
+      - backend-etcd-01
+      - backend-etcd-02
+      - backend-etcd-03
+
+  backend-etcd-01:
+    image: bitnami/etcd:3.5.2
+    expose:
+      - 2379
+      - 2380
+    environment:
+      ETCD_NAME: "backend-etcd-01"
+      ALLOW_NONE_AUTHENTICATION: "yes"
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: "http://backend-etcd-01:2380"
+      ETCD_LISTEN_PEER_URLS: "http://0.0.0.0:2380"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://backend-etcd-01:2379"
+      ETCD_INITIAL_CLUSTER_TOKEN: "etcd-cluster"
+      ETCD_INITIAL_CLUSTER: "backend-etcd-01=http://backend-etcd-01:2380,backend-etcd-02=http://backend-etcd-02:2380,backend-etcd-03=http://backend-etcd-03:2380"
+      ETCD_INITIAL_CLUSTER_STATE: "new"
+    networks:
+      - backend-etcd
+
+  backend-etcd-02:
+    image: bitnami/etcd:3.5.2
+    expose:
+      - 2379
+      - 2380
+    environment:
+      ETCD_NAME: "backend-etcd-02"
+      ALLOW_NONE_AUTHENTICATION: "yes"
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: "http://backend-etcd-02:2380"
+      ETCD_LISTEN_PEER_URLS: "http://0.0.0.0:2380"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://backend-etcd-02:2379"
+      ETCD_INITIAL_CLUSTER_TOKEN: "etcd-cluster"
+      ETCD_INITIAL_CLUSTER: "backend-etcd-01=http://backend-etcd-01:2380,backend-etcd-02=http://backend-etcd-02:2380,backend-etcd-03=http://backend-etcd-03:2380"
+      ETCD_INITIAL_CLUSTER_STATE: "new"
+    networks:
+      - backend-etcd
+
+  backend-etcd-03:
+    image: bitnami/etcd:3.5.2
+    expose:
+      - 2379
+      - 2380
+    environment:
+      ETCD_NAME: "backend-etcd-03"
+      ALLOW_NONE_AUTHENTICATION: "yes"
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: "http://backend-etcd-03:2380"
+      ETCD_LISTEN_PEER_URLS: "http://0.0.0.0:2380"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://backend-etcd-03:2379"
+      ETCD_INITIAL_CLUSTER_TOKEN: "etcd-cluster"
+      ETCD_INITIAL_CLUSTER: "backend-etcd-01=http://backend-etcd-01:2380,backend-etcd-02=http://backend-etcd-02:2380,backend-etcd-03=http://backend-etcd-03:2380"
+      ETCD_INITIAL_CLUSTER_STATE: "new"
+    networks:
+      - backend-etcd
