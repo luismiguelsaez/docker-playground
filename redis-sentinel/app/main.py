@@ -13,9 +13,11 @@ redisPort    = environ.get('REDIS_PORT')    if 'REDIS_PORT'    in environ else 6
 redisDb      = environ.get('REDIS_DB')      if 'REDIS_DB'      in environ else 0
 redisTimeout = environ.get('REDIS_TIMEOUT') if 'REDIS_TIMEOUT' in environ else 5
 
+logLevel = environ.get('LOG_LEVEL') if 'LOG_LEVEL' in environ else 'ERROR'
+
 r = redis.StrictRedis(host=redisHost, port=redisPort, db=redisDb, socket_timeout=redisTimeout)
 
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logLevel)
 
 val_len = 16
 
