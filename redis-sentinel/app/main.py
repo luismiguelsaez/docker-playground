@@ -6,8 +6,14 @@ import string
 import random
 import uuid
 import logging
+from os import environ
 
-r = redis.StrictRedis(host='sentinel.tunnel.local', port=6379, db=0, socket_timeout=1)
+redisHost    = environ.get('REDIS_HOST')    if 'REDIS_HOST'    in environ else 'localhost'
+redisPort    = environ.get('REDIS_PORT')    if 'REDIS_PORT'    in environ else 6379
+redisDb      = environ.get('REDIS_DB')      if 'REDIS_DB'      in environ else 0
+redisTimeout = environ.get('REDIS_TIMEOUT') if 'REDIS_TIMEOUT' in environ else 5
+
+r = redis.StrictRedis(host=redisHost, port=redisPort, db=redisDb, socket_timeout=redisTimeout)
 
 logging.basicConfig(level=logging.ERROR)
 

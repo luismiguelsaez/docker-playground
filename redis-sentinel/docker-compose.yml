@@ -108,6 +108,8 @@ services:
       - 6379
     ports:
       - 6379:6379/tcp
+    environment:
+      SENTINEL_ADDRESSES: 'sentinel-0:26379,sentinel-1:26379,sentinel-2:26379'
     networks:
       - redis-sentinel
     depends_on:
@@ -117,6 +119,8 @@ services:
 
   app:
     build: app
+    environment:
+      REDIS_HOST: "sentinel.tunnel.local"
     networks:
       - redis-sentinel
     depends_on:
