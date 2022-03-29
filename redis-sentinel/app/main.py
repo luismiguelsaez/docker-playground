@@ -14,6 +14,7 @@ redisDb      = environ.get('REDIS_DB')      if 'REDIS_DB'      in environ else 0
 redisTimeout = environ.get('REDIS_TIMEOUT') if 'REDIS_TIMEOUT' in environ else 5
 
 logLevel = environ.get('LOG_LEVEL') if 'LOG_LEVEL' in environ else 'ERROR'
+reqSleep = environ.get('REQ_SLEEP') if 'REQ_SLEEP' in environ else 0.10
 
 r = redis.StrictRedis(host=redisHost, port=redisPort, db=redisDb, socket_timeout=redisTimeout)
 
@@ -36,4 +37,4 @@ while True:
   except redis.exceptions.TimeoutError as clTout:
     logging.critical("Node timeout error: {}".format(str(clTout)))
 
-  sleep(0.10)
+  sleep(float(reqSleep))

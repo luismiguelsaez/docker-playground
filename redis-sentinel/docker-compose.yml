@@ -121,6 +121,7 @@ services:
     build: app
     environment:
       REDIS_HOST: "sentinel.tunnel.local"
+      REQ_SLEEP: 0.02
       LOG_LEVEL: "DEBUG"
     networks:
       - redis-sentinel
