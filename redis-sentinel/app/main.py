@@ -46,17 +46,19 @@ while True:
 
   except redis.exceptions.ConnectionError as clConn:
     logging.critical("Node connection error: {}".format(str(clConn)))
+
     countFailure += 1
 
   except redis.exceptions.TimeoutError as clTout:
     logging.critical("Node timeout error: {}".format(str(clTout)))
+
     countFailure += 1
 
   countTotal += 1
   loopCount += 1
 
   if loopCount % 100 == 0:
-    logging.info("Requests total: {} - Success: {} - Error: {}".format(str(countTotal), str(countSuccess, str(countFailure))))
+    logging.info("Requests total: {} - Success: {} - Error: {}".format(str(countTotal), str(countSuccess), str(countFailure)))
     loopCount = 0
 
   sleep(float(reqSleep))
