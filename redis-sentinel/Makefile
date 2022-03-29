@@ -23,5 +23,8 @@ sentinel-get-master-addr:
 sentinel-tunnel-connect:
 	docker-compose exec redis-0 redis-cli -h sentinel-tunnel -p 6379 INFO Replication
 
+sentinel-failover:
+	docker-compose exec sentinel-0 redis-cli -h localhost -p 26379 sentinel failover mymaster
+
 down:
 	docker-compose down --remove-orphans
