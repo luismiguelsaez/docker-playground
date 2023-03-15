@@ -47,6 +47,7 @@ spec:
             memory: 64Mi
           limits:
             memory: 64Mi
+            cpu: 200m
       - image: luismiguelsaez/languagetool:6.0
         imagePullPolicy: IfNotPresent
         name: languagetool
@@ -107,6 +108,6 @@ metadata:
   name: jmx-exporter-config
 data:
   config.yaml: |-
-    startDelaySeconds: 0
+    startDelaySeconds: 45
     jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:9991/jmxrmi
     ssl: false
