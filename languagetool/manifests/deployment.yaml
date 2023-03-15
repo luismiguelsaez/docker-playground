@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: languagetool
+  name: languagetool
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: languagetool
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: languagetool
+    spec:
+      volumes:
+        - name: jmx-exporter-config
+          configMap:
+            name: jmx-exporter-config
+      containers:
+      - name: jmx-exporter
+        image: bitnami/jmx-exporter:0.18.0
+        imagePullPolicy: IfNotPresent
+        command:
+        - java
+        - -jar
+        - jmx_prometheus_httpserver.jar
+        - "9992"
+        - /config/config.yaml
+        ports:
+        - name: metrics
+          containerPort: 9992
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config
+          name: jmx-exporter-config
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            memory: 64Mi
+      - image: luismiguelsaez/languagetool:6.0
+        imagePullPolicy: IfNotPresent
+        name: languagetool
+        ports:
+        - name: app
+          containerPort: 8010
+          protocol: TCP
+        env:
+          - name: JAVA_TOOL_OPTIONS
+            value: -Xms128M -Xmx384M -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9991 -Dcom.sun.management.jmxremote.rmi.port=9991 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.local.only=true -Djava.rmi.server.hostname=localhost
+        readinessProbe:
+          initialDelaySeconds: 45
+          timeoutSeconds: 10
+          httpGet:
+            port: 8010
+            path: /v2/languages
+        livenessProbe:
+          initialDelaySeconds: 45
+          timeoutSeconds: 10
+          httpGet:
+            port: 8010
+            path: /v2/languages
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 256Mi
+          limits:
+            memory: 512Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: languagetool
+  name: languagetool
+  namespace: default
+spec:
+  ports:
+  - port: 8010
+    protocol: TCP
+    targetPort: 8010
+    name: app
+  - port: 9992
+    targetPort: 9992
+    protocol: TCP
+    name: metrics
+  selector:
+    app: languagetool
+  type: ClusterIP
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jmx-exporter-config
+data:
+  config.yaml: |-
+    startDelaySeconds: 0
+    jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:9991/jmxrmi
+    ssl: false
