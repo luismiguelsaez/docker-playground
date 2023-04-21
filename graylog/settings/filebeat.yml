@@ -1,0 +1,27 @@
+monitoring.enabled: false
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: ${path.config}/logs
+  name: filebeat.log
+  keepfiles: 1
+  permissions: 0640
+
+filebeat.inputs:
+- type: filestream
+  id: self
+  paths:
+    - ${path.config}/logs/*.log
+
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+processors:
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+
+output.logstash:
+  hosts: ["logstash:5044"]
