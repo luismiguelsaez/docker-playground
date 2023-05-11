@@ -28,3 +28,14 @@ curl 'localhost:8010/v2/check?text=voila&language=fr'
 
 - https://prod-ci.lokalise.work/job/langtool/job/promote/
   - `4.7-arm64`
+
+
+# Issue libgomp?
+
+```bash
+docker build --platform amd64 -t 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool/app:4.7 .
+```
+
+```bash
+docker run -d -p 8010:8010 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool/app:4.7
+```

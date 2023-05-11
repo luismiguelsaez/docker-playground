@@ -29,6 +29,9 @@ COPY --from=build /srv /srv
 # Set workdir and copy external files
 WORKDIR /srv/languagetool-lokalise
 
+# Fix libgomp1 error
+RUN apt-get -y update && apt-get install -y libgomp1
+
 COPY server.properties .
 COPY entrypoint.sh .
 
