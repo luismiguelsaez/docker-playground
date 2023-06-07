@@ -47,5 +47,8 @@ jobs:
         context: crypto/bip39
         platforms: linux/amd64,linux/arm/v7
         push: ${{ github.event_name != 'pull_request' }}
+        enableBuildKit: true
         tags: ${{ steps.docker_meta.outputs.tags }}
         labels: ${{ steps.docker_meta.outputs.labels }}
+        buildArgs: |
+          VERSION=0.5.4
