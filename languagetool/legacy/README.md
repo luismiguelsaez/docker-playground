@@ -2,40 +2,23 @@
 - Commit: https://github.com/lokalise/languagetool-int/blob/b4d608128e0a396d2ba407a3a1193b508fb16be7/infra/Dockerfile
 - Dockerfile: https://github.com/Erikvl87/docker-languagetool/blob/v4.7/Dockerfile
 
-## Build
+# Build image
 
 ```bash
-docker build --platform amd64 -t 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool-int/app:4.7-amd64 .
-docker build --platform arm64 -t 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool-int/app:4.7-arm64 .
+
+```bash
+docker build -t languagetool:5.0-fastText \
+  --build-arg LANGTOOL_ZIP_URL=https://languagetool.org/download/LanguageTool-5.0.zip -f Dockerfile.fasttext .
 ```
 
-## Push
+# Start container
 
 ```bash
-docker push 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool-int/app:4.7-amd64
-docker push 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool-int/app:4.7-arm64
+docker run -v ${PWD}/projects/k8s/langtool/perf/server.properties:/srv/server.properties:ro -p 8010:8010 -d 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool/app:6.2-SNAPSHOT
 ```
 
-## Run
+# Launch load test
 
 ```bash
-docker run -p 8010:8010 -d -e IS_NEWRELIC_ENABLED=true -e NEWRELIC_LICENSE_KEY=test 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool-int/app:4.7-arm64
-
-curl 'localhost:8010/v2/check?text=voila&language=fr'
-```
-
-## Deploy
-
-- https://prod-ci.lokalise.work/job/langtool/job/promote/
-  - `4.7-arm64`
-
-
-# Issue libgomp?
-
-```bash
-docker build --platform amd64 -t 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool/app:4.7 .
-```
-
-```bash
-docker run -d -p 8010:8010 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool/app:4.7
+docker run -it -v ${PWD}/projects/k8s/langtool/perf:/test --rm --network host grafana/k6:0.45.0 run /test/performance_tuning.js
 ```

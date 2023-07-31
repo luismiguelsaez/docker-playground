@@ -3,7 +3,7 @@ FROM openjdk:11 as base
 
 FROM base as build
 
-ARG LANGTOOL_ZIP_URL=https://lokalise-live-lok-app-main-assets.s3.eu-central-1.amazonaws.com/languagetool-lokalise-3.zip
+ARG LANGTOOL_ZIP_URL=https://lokalise-live-lok-app-main-assets.s3.eu-central-1.amazonaws.com/languagetool-lokalise-4.zip
 ARG NEWRELIC_ZIP_URL=https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip
 
 WORKDIR /srv
