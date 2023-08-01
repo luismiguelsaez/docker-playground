@@ -4,21 +4,31 @@
 
 # Build image
 
-```bash
-
+- Debian ( amd64 )
 ```bash
 docker build -t languagetool:5.0-fastText \
-  --build-arg LANGTOOL_ZIP_URL=https://languagetool.org/download/LanguageTool-5.0.zip -f Dockerfile.fasttext .
+  --platform amd64 \
+  --build-arg LANGTOOL_ZIP_URL=https://languagetool.org/download/LanguageTool-5.0.zip \
+  -f Dockerfile.fasttext .
+```
+
+- Alpine ( amd64 )
+```bash
+docker buildx build -t languagetool:5.0-alpine-fastText \
+  --no-cache \
+  --build-arg LANGTOOL_ZIP_URL=https://languagetool.org/download/LanguageTool-5.0.zip \
+  --platform linux/amd64 \
+  -f Dockerfile.alpine-fasttext .
 ```
 
 # Start container
 
 ```bash
-docker run -v ${PWD}/projects/k8s/langtool/perf/server.properties:/srv/server.properties:ro -p 8010:8010 -d 053497547689.dkr.ecr.eu-central-1.amazonaws.com/languagetool/app:6.2-SNAPSHOT
+docker run -d -v ${PWD}/server.properties:/srv/server.properties:ro -p 8010:8010 -d languagetool:5.0-alpine-fastText
 ```
 
 # Launch load test
 
 ```bash
-docker run -it -v ${PWD}/projects/k8s/langtool/perf:/test --rm --network host grafana/k6:0.45.0 run /test/performance_tuning.js
+docker run -it -v ${PWD}/../test:/test --rm --network host grafana/k6:0.45.0 run /test/performance.js
 ```
