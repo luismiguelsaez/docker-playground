@@ -1,0 +1,11 @@
+{
+  "$schema": "https://www.krakend.io/schema/v3.json",
+  "version": 3,
+  "name": "test",
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "debug_endpoint": true,
+  "echo_endpoint": true,
+  "port": 8080
+}

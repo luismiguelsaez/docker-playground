@@ -36,6 +36,28 @@ RUN git clone https://github.com/facebookresearch/fastText.git && \
 # Download FastText models
 RUN curl -sL https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin -o /srv/fastText/models/lid.176.bin
 
+# Download word2vec model
+RUN mkdir -p /srv/word2vec
+
+RUN curl -sL -O https://languagetool.org/download/word2vec/de.zip
+RUN curl -sL -O https://languagetool.org/download/word2vec/en.zip
+RUN curl -sL -O https://languagetool.org/download/word2vec/pt.zip
+
+RUN unzip -q *.zip
+RUN rm -f *.zip
+
+# Download language model ( increases storage size by serveral GB )
+#RUN mkdir -p /srv/language-models
+#WORKDIR /srv/language-models
+#
+#RUN curl -sL -O https://languagetool.org/download/ngram-data/ngrams-es-20150915.zip
+#RUN curl -sL -O https://languagetool.org/download/ngram-data/ngrams-en-20150817.zip
+#RUN curl -sL -O https://languagetool.org/download/ngram-data/ngrams-de-20150819.zip
+#RUN curl -sL -O https://languagetool.org/download/ngram-data/ngrams-fr-20150913.zip
+#RUN curl -sL -O https://languagetool.org/download/ngram-data/ngrams-nl-20181229.zip
+#
+#RUN unzip -q *.zip
+#RUN rm -f *.zip
 
 FROM base as app
 

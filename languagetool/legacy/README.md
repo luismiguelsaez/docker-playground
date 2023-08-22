@@ -21,6 +21,14 @@ docker buildx build -t languagetool:5.0-alpine-fastText \
   -f Dockerfile.alpine-fasttext .
 ```
 
+```bash
+docker buildx build -t languagetool:4.9-alpine-fastText \
+  --no-cache \
+  --build-arg LANGTOOL_ZIP_URL=https://languagetool.org/download/LanguageTool-4.9.zip \
+  --platform linux/amd64 \
+  -f Dockerfile.alpine-fasttext .
+```
+
 # Start container
 
 ```bash

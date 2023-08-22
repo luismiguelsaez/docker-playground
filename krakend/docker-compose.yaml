@@ -1,0 +1,30 @@
+# Docker compose file to deploy krakend
+version: '3.7'
+
+services:
+  krakend:
+    image: krakend/krakend-ee:2.3.3
+    ports:
+      - 8080:8080
+    volumes:
+      - ./config/krakend.json:/etc/krakend/krakend.json
+    healthcheck:
+      test: ["CMD", "wget", "-O-", "http://localhost:8080/__echo"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  api:
+    image: luismiguelsaez/fastapi:latest
+    environment:
+      DB_CONN: "mysql://app:p4ssw0rd@mysql:3306/app"
+  mariadb:
+    image: mariadb:10.5.8
+    environment:
+      MYSQL_ROOT_PASSWORD: p4ssw0rd
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: p4ssw0rd
+    #volumes:
+    #  - ./data:/var/lib/mysql
+    ports:
+      - 3306:3306
