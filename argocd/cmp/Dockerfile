@@ -15,6 +15,12 @@ RUN curl -sL https://github.com/kubernetes-sigs/kustomize/releases/download/kust
     && chmod +x /usr/local/bin/kustomize \
     && rm /tmp/kustomize.tar.gz
 
+# Install Helm
+RUN curl -sL https://get.helm.sh/helm-v3.13.3-${TARGET_OS}-${TARGET_ARCH}.tar.gz -o /tmp/helm.tar.gz \
+    && tar -xzf /tmp/helm.tar.gz -C /usr/local/bin \
+    && chmod +x /usr/local/bin/helm \
+    && rm /tmp/helm.tar.gz
+
 RUN addgroup -g 1000 argocd && adduser -u 1000 -G argocd -D -s /bin/sh -h /home/argocd argocd
 
 USER argocd
